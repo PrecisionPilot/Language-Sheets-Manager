@@ -81,8 +81,12 @@ else:
 
 
 # Find a way to combine "Chinese" and "Chinese (Simplified)" --Check
-# Fix formatting for output statements
-# Fail-safe (anti case sensitive)
+# Fix formatting for output statements --Check
+# Fail-safe (anti case sensitive) --Check
+# Sort dictionary if possible --Check
+# 100% fail-safe
+# Print introduction and features of this software
 # See if commas cause problems to the csv when reading from Anki and Quizlet
-# Sort dictionary if possible
 # Perhaps save it as a tsv
+
+# GitHub Description
