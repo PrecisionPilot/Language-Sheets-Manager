@@ -2,11 +2,16 @@ import pandas as pd
 import numpy as np
 import csv
 import os
+from os import path
 
-def formatter(path):
+def formatter(fileName):
     # get tsv file and store it in a list
-    data = np.loadtxt(path, dtype=str, delimiter="\t", encoding="utf-8") #reading data from tsv 
-    data = data.tolist()
+    if path.exists(fileName):
+        data = np.loadtxt(fileName, dtype=str, delimiter="\t", encoding="utf-8") #reading data from tsv 
+        data = data.tolist()
+    else:
+        print("file name doesn't exist, please try again")
+        return
     
     # variables
     languagesData = {}
@@ -19,7 +24,7 @@ def formatter(path):
         if data[i][0] == "English":
             data[i][0], data[i][1] = data[i][1], data[i][0]
             data[i][2], data[i][3] = data[i][3], data[i][2]
-        if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chiense" not "Chinese (Simplified)"
+        if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chinese" not "Chinese (Simplified)"
             data[i][0] = "Chinese"
     
     # Get all existing languages in the spreadsheet, store it in "languagesData" list
@@ -32,7 +37,7 @@ def formatter(path):
     # ---Exporting process---
     
     # Ask user which language to output to csv
-    print("Select languages (seperated by spaces) to output as csv (tip: type \"all\" to use all options)\n" +
+    print("\nSelect languages (seperated by spaces) to output as tsv (tip: type \"all\" to use all options)\n" +
             "Here are your options (", end="")
     for key,val in languagesData.items(): languages.append(key)
     languages.sort()
@@ -44,8 +49,8 @@ def formatter(path):
         languagesSelection[i] = languagesSelection[i][0].upper() + languagesSelection[i][1:].lower()
 
     # Get folder of the path
-    destination_path = os.path.dirname(path)
-    if destination_path: # C:\Users\seanw\Downloads\ -> Downloads/
+    destination_path = os.path.dirname(fileName)
+    if destination_path: # C:\Users\seanw\Downloads\ -> Downloads\
         destination_path += "\\"
 
 
@@ -55,38 +60,43 @@ def formatter(path):
         languagesSelection = languages
     for i in range(len(languagesSelection)): # Fail-safe mechanism: Make sure selection languages exist
         if not languagesSelection[i] in languages:
-            languagesSelection.pop(i) # remove elemend of the languages selection that doesn't exist
+            del languagesSelection[i] # remove elemend of the languages selection that doesn't exist
+
     # Export
     for languageSelection in languagesSelection:
-        with open(destination_path + languageSelection + ".csv", "w+", newline="", encoding="utf-8") as f: #writes it in the right path 
-            writer = csv.writer(f)
+        with open(destination_path + languageSelection + ".tsv", "w+", newline="", encoding="utf-8") as f: #writes it in the right path 
+            writer = csv.writer(f, delimiter="\t")
             writer.writerows(languagesData[languageSelection])
         exportCount += 1
     
     # Message for whether the export succeeded or not
     if exportCount > 0:
-        print("Successfully exported", exportCount, "file(s)!")
-        print("Have a good day")
+        print("\nSuccessfully exported", exportCount, "file(s)!")
+        for selection in languagesSelection:
+            print(selection + ".tsv")
+        print("\nHave a good day!")
     else:
-        print("No files exported, something may have gone wrong")
+        print("No files exported, check if you spelled your options right")
 # ---End of formatter()
 
+# introduction
+print("Welcome to TSV Flashcard Organizer!")
+print("This is a fail-safe python script where you will feed the spreadsheet exported from Google Translate saved translations to be "
+        + "organized and optimized for exporting to your favorite flashcard app\n")
+print("What this app will do:")
+print("- All translations will be sorted from the language you're learning (eg. Chinese) to English")
+print("- Different languages will be sorted into their own spreadsheet file (tsv) you'll have the option which ones you want to export")
+
+# Fail-safe script
+# Google translate spreadsheet to sort it and export it into different spreadsheat files of your choosing
+# Output files optimized to be imported to Anki or Quizlet flashcards
 
 x = input("Type in the path of the your tsv file to organize (tip: type \"this\" for local directory): ")
-            
+
 if x.lower() == "this":
     formatter(input("Type in file name: "))
 else:
     formatter(x)
 
 
-# Find a way to combine "Chinese" and "Chinese (Simplified)" --Check
-# Fix formatting for output statements --Check
-# Fail-safe (anti case sensitive) --Check
-# Sort dictionary if possible --Check
-# 100% fail-safe
-# Print introduction and features of this software
-# See if commas cause problems to the csv when reading from Anki and Quizlet
-# Perhaps save it as a tsv
-
-# GitHub Description
+# Make 100% fail-safe
