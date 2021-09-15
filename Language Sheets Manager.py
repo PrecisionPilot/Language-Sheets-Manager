@@ -84,7 +84,7 @@ print("Welcome to TSV Flashcard Organizer!")
 print("This is a fail-safe python script where you will feed the spreadsheet exported from Google Translate saved translations to be "
         + "organized and optimized for exporting to your favorite flashcard app\n")
 print("What this app will do:")
-print("- All translations will be sorted from the language you're learning (eg. Chinese) to English")
+print("- All translations will be sorted from the language you're learning (eg. Chinese to English)")
 print("- Different languages will be sorted into their own spreadsheet file (tsv) you'll have the option which ones you want to export")
 
 # Fail-safe script
