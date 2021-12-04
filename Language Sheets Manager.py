@@ -1,7 +1,16 @@
-import pandas as pd
-import numpy as np
-import csv
 import os
+try:
+    import pandas as pd
+    import numpy as np
+    import csv
+    import os
+except ImportError:
+    print("installing required modules")
+    os.system("pip install pandas")
+    os.system("pip install numpy")
+    os.system("pip install csv")
+    os.system("pip install os")
+
 from os import path
 
 def formatter(fileName):
