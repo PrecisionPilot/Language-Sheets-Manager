@@ -4,14 +4,21 @@ try:
     import numpy as np
     import csv
     import os
+    import xpinyin
 except ImportError:
     print("installing required modules")
     os.system("pip install pandas")
     os.system("pip install numpy")
     os.system("pip install csv")
     os.system("pip install os")
+    os.system("pip install -U xpinyin")
 
 from os import path
+from xpinyin import Pinyin
+
+def pinyin(x: str) -> str:
+    p = Pinyin()
+    return p.get_pinyin(x, tone_marks="marks")
 
 def formatter(fileName):
     # get tsv file and store it in a list
@@ -106,6 +113,5 @@ if x.lower() == "this":
     formatter(input("Type in file name: "))
 else:
     formatter(x)
-
 
 # Make 100% fail-safe
