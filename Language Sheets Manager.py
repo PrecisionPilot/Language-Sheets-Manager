@@ -1,10 +1,11 @@
 import os
+from os import path
 try:
     import pandas as pd
     import numpy as np
     import csv
     import os
-    import xpinyin
+    from xpinyin import Pinyin
 except ImportError:
     print("installing required modules")
     os.system("pip install pandas")
@@ -13,8 +14,6 @@ except ImportError:
     os.system("pip install os")
     os.system("pip install -U xpinyin")
 
-from os import path
-from xpinyin import Pinyin
 
 def pinyin(x: str) -> str:
     p = Pinyin()
@@ -43,7 +42,7 @@ def formatter(fileName):
         if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chinese" not "Chinese (Simplified)"
             data[i][0] = "Chinese"
         if data[i][0] == "Chinese": # Add pinyin to the English part if it's a Chinese translation
-            print("(" + pinyin(data[i][2]) + ")\n" + data[i][3])
+            data[i][3] = "(" + pinyin(data[i][2]) + ")\n" + data[i][3]
 
     # Get all existing languages in the spreadsheet, store it in "languagesData" list
     for row in data:
@@ -51,7 +50,6 @@ def formatter(fileName):
             languagesData[row[0]] = []
         # store the row on the dictionary
         languagesData[row[0]].append(row[2:4]) # get only the translation
-
 
 
     # ---Exporting process---
@@ -80,7 +78,7 @@ def formatter(fileName):
         languagesSelection = languages
     for i in range(len(languagesSelection)): # Fail-safe mechanism: Make sure selection languages exist
         if not languagesSelection[i] in languages:
-            del languagesSelection[i] # remove elemend of the languages selection that doesn't exist
+            del languagesSelection[i] # remove element of the languages selection that doesn't exist
 
     # Export
     for languageSelection in languagesSelection:
@@ -109,15 +107,11 @@ print("- Different languages will be sorted into their own spreadsheet file (tsv
 print("- Pinyin will be automatically added to translations in Chinese")
 
 # Fail-safe script
-# Google translate spreadsheet to sort it and export it into different spreadsheat files of your choosing
-# Output files optimized to be imported to Anki or Quizlet flashcards
+# Automatically export when there's only one option for languages
 
 # Option of pasting the tsv spreadsheat directly into the console
 # Option of typing in the words directly and use a translate library
 
-x = input("Type in the path of the your tsv file to organize (tip: type \"this\" for local directory): ")
+x = input("Type in the path of the your tsv file to organize (you may also type in a relative directory): ")
 
-if x.lower() == "this":
-    formatter(input("Type in file name: "))
-else:
-    formatter(x)
+formatter(x)
