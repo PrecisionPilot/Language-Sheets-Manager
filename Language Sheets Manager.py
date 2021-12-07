@@ -18,7 +18,7 @@ from xpinyin import Pinyin
 
 def pinyin(x: str) -> str:
     p = Pinyin()
-    return p.get_pinyin(x, tone_marks="marks")
+    return p.get_pinyin(x, tone_marks="marks").replace("-", " ")
 
 def formatter(fileName):
     # get tsv file and store it in a list
@@ -42,13 +42,17 @@ def formatter(fileName):
             data[i][2], data[i][3] = data[i][3], data[i][2]
         if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chinese" not "Chinese (Simplified)"
             data[i][0] = "Chinese"
-    
+        if data[i][0] == "Chinese": # Add pinyin to the English part if it's a Chinese translation
+            print("(" + pinyin(data[i][2]) + ")\n" + data[i][3])
+
     # Get all existing languages in the spreadsheet, store it in "languagesData" list
     for row in data:
         if not row[0] in languagesData:
             languagesData[row[0]] = []
         # store the row on the dictionary
         languagesData[row[0]].append(row[2:4]) # get only the translation
+
+
 
     # ---Exporting process---
     
@@ -102,10 +106,14 @@ print("This is a fail-safe python script where you will feed the spreadsheet exp
 print("What this app will do:")
 print("- All translations will be sorted from the language you're learning (eg. Chinese to English)")
 print("- Different languages will be sorted into their own spreadsheet file (tsv) you'll have the option which ones you want to export")
+print("- Pinyin will be automatically added to translations in Chinese")
 
 # Fail-safe script
 # Google translate spreadsheet to sort it and export it into different spreadsheat files of your choosing
 # Output files optimized to be imported to Anki or Quizlet flashcards
+
+# Option of pasting the tsv spreadsheat directly into the console
+# Option of typing in the words directly and use a translate library
 
 x = input("Type in the path of the your tsv file to organize (tip: type \"this\" for local directory): ")
 
@@ -113,5 +121,3 @@ if x.lower() == "this":
     formatter(input("Type in file name: "))
 else:
     formatter(x)
-
-# Make 100% fail-safe
