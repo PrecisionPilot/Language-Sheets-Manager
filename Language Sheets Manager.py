@@ -115,3 +115,5 @@ print("- Pinyin will be automatically added to translations in Chinese")
 x = input("Type in the path of the your tsv file to organize (you may also type in a relative directory): ")
 
 formatter(x)
+
+# Add feature to automatically detect the desktop location
