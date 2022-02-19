@@ -42,7 +42,7 @@ def formatter(fileName):
         if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chinese" not "Chinese (Simplified)"
             data[i][0] = "Chinese"
         if data[i][0] == "Chinese": # Add pinyin to the English part if it's a Chinese translation
-            data[i][3] = "(" + pinyin(data[i][2]) + ")\n" + data[i][3]
+            data[i][3] = "(" + pinyin(data[i][2]) + ") + " + data[i][3]
 
     # Get all existing languages in the spreadsheet, store it in "languagesData" list
     for row in data:
