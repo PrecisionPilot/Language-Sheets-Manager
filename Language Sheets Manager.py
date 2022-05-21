@@ -28,6 +28,8 @@ def formatter(fileName):
         print("file name doesn't exist, please try again")
         return
     
+    list = [[0, 1], [0, 2]]
+
     # variables
     languagesData = {}
     languages = []
@@ -112,7 +114,11 @@ print("- Pinyin will be automatically added to translations in Chinese")
 # Option of pasting the tsv spreadsheat directly into the console
 # Option of typing in the words directly and use a translate library
 
-x = input("Type in the path of the your tsv file to organize (you may also type in a relative directory): ")
+# x = input("Type in the path of the your tsv file to organize (you may also type in a relative directory): ")
+print("Paste in the copied speadsheet")
+userInput = ""
+while userInput.lower() == "end":
+    userInput
 
 formatter(x)
 
