@@ -1,5 +1,6 @@
 import os
 from os import path
+from pathlib import Path
 try:
     import pandas as pd
     import numpy as np
@@ -19,14 +20,18 @@ def pinyin(x: str) -> str:
     p = Pinyin()
     return p.get_pinyin(x, tone_marks="marks").replace("-", " ")
 
-def formatter(fileName):
-    # get tsv file and store it in a list
-    if path.exists(fileName):
-        data = np.loadtxt(fileName, dtype=str, delimiter="\t", encoding="utf-8") #reading data from tsv 
-        data = data.tolist()
-    else:
-        print("file name doesn't exist, please try again")
-        return
+def inputMultiline(end:str ="q") -> str:
+    userInput = ""
+    while True:
+        i = input()
+        if i == end:
+            # Remove the last newline
+            userInput = userInput[0:-1]
+            break
+        userInput += i + "\n"
+    return userInput
+
+def formatter(data: str):
     
     list = [[0, 1], [0, 2]]
 
@@ -68,8 +73,8 @@ def formatter(fileName):
     for i in range(len(languagesSelection)): # anti case sensitive code
         languagesSelection[i] = languagesSelection[i][0].upper() + languagesSelection[i][1:].lower()
 
-    # Get folder of the path
-    destination_path = os.path.dirname(fileName)
+    # Get the downloads folder
+    destination_path = str(Path.home() / "Downloads")
     if destination_path: # C:\Users\seanw\Downloads\ -> Downloads\
         destination_path += "\\"
 
@@ -116,10 +121,14 @@ print("- Pinyin will be automatically added to translations in Chinese")
 
 # x = input("Type in the path of the your tsv file to organize (you may also type in a relative directory): ")
 print("Paste in the copied speadsheet")
-userInput = ""
-while userInput.lower() == "end":
-    userInput
+userInput = inputMultiline()
 
-formatter(x)
+# Convert to 2d list
+userInput = userInput.split("\n")
+for i, inp in enumerate(userInput):
+    userInput[i] = inp.split("\t")
+print(userInput)
+
+formatter(userInput)
 
 # Add feature to automatically detect the desktop location
