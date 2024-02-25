@@ -29,26 +29,47 @@ def inputMultiline() -> str:
     return userInput
 
 def formatter(data: list):
-    for i in range(len(data)):
-        if data[i][0]:
-            # 1st deck back: English  -  Simplified (pinyin)
-            translation = translate(data[i][0])
-            data[i].insert(1, f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})")
-        else:
-            data[i].insert(1, "")
-        if data[i][2]:
-            # 2nd deck back: Jyutping  -  Simplified (pinyin)
-            data[i].append(f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})")
+    data1 = []
+    data2 = []
 
-        progress = round((i + 1) * 100 / len(data))
+    for i in range(len(data)):
+        if not data[i][0]:
+            break
+
+        # 1st deck back: English  -  Simplified (pinyin)
+        translation = translate(data[i][0])
+        arr = [data[i][0], f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})"]
+        data1.append(arr)
+        
+        # Print progress
+        progress = round((i + 1) * 100 / (len(data1) + len(data2)))
+        print(f"{progress}%", end="\r")
+
+    for i in range(len(data)):
+        if not data[i][1]:
+            break
+
+        # TODO: Comment
+        arr = [data[i][1], f"{get_jyutping(data[i][1])}  -  {chinese_converter.to_simplified(data[i][1])} ({pinyin(data[i][1])})"]
+        data2.append(arr)
+        
+        # Print progress
+        progress = round((len(data1) + i + 1) * 100 / (len(data1) + len(data2)))
         print(f"{progress}%", end="\r")
     print()
 
-    # Export based on language selection
-    with open("Cantonese.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
+    # Export Cantonese1.tsv
+    with open("Cantonese1.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
         writer = csv.writer(f, delimiter="\t")
-        writer.writerows(data)
+        writer.writerows(data1)
+
+    # Export Cantonese2.tsv
+    with open("Cantonese2.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
+        writer = csv.writer(f, delimiter="\t")
+        writer.writerows(data2)
     print("\nSuccessfully exported!")
+
+
 # ---End of formatter()
 
 # introduction
