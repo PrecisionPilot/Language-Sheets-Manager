@@ -38,8 +38,8 @@ def formatter(data: str):
             data[i][2], data[i][3] = data[i][3], data[i][2]
         if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chinese" not "Chinese (Simplified)"
             data[i][0] = "Chinese"
-        if data[i][0] == "Chinese": # Add pinyin to the English part if it's a Chinese translation
-            data[i][3] = "(" + pinyin(data[i][2]) + ") + " + data[i][3]
+        if data[i][0] == "Chinese" or data[i][0] == "Chinese (Traditional)": # Add pinyin to the English part if it's a Chinese translation
+            data[i][3] = "(" + pinyin(data[i][2]) + ")  " + data[i][3]
 
     # Get all existing languages in the spreadsheet, store it in "languagesData" list
     for row in data:
@@ -55,12 +55,20 @@ def formatter(data: str):
     for key,val in languagesData.items():
         languages.append(key)
     languages.sort()
+    languageOptions = ""
+    for i, language in enumerate(languages):
+        languageOptions += language + f" ({i}), "
+    languageOptions = languageOptions[0:-2]
     # print the language options available
-    print("\nSelect languages (seperated by spaces) to output as tsv (tip: type \"all\" to use all options)\n" +
-            f"Here are your options ({', '.join(languages)})")
-    languagesSelection = input().split(' ') # store user's selection(s)
-    for i in range(len(languagesSelection)): # anti case sensitive code
-        languagesSelection[i] = languagesSelection[i][0].upper() + languagesSelection[i][1:].lower()
+    print("\nSelect languages (seperated by a space) to output as tsv (tip: type \"all\" to use all options)\n" +
+            f"Here are your options: {languageOptions}")
+    
+    # Get user language selection
+    userInput = input()
+    if userInput == "all": # type "all" to export all the languages there is
+        languagesSelection = languages
+    else:
+        languagesSelection = [languages[int(i)] for i in userInput.split(' ')] # store user's selections as a number array
 
     # Get the downloads folder
     destination_path = str(Path.home() / "Downloads")
@@ -70,13 +78,6 @@ def formatter(data: str):
 
     # Export based on language selection
     exportCount = 0
-    if languagesSelection[0].lower() == "all": # type "all" to export all the languages there is
-        languagesSelection = languages
-    for i in range(len(languagesSelection)): # Fail-safe mechanism: Make sure selection languages exist
-        if not languagesSelection[i] in languages:
-            del languagesSelection[i] # remove element of the languages selection that doesn't exist
-
-    # Export
     for languageSelection in languagesSelection:
         with open(destination_path + languageSelection + ".tsv", "w+", newline="", encoding="utf-8") as f: #writes it in the right path 
             writer = csv.writer(f, delimiter="\t")
@@ -111,12 +112,12 @@ print("- Pinyin will be automatically added to translations in Chinese")
 # x = input("Type in the path of the your tsv file to organize (you may also type in a relative directory): ")
 print("Paste in the copied speadsheet")
 userInput = inputMultiline()
+print("Loading...")
 
 # Convert to 2d list
 userInput = userInput.split("\n")
 for i, inp in enumerate(userInput):
     userInput[i] = inp.split("\t")
-print(userInput)
 
 formatter(userInput)
 
