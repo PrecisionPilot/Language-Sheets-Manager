@@ -42,21 +42,22 @@ def formatter(data: list):
         data1.append(arr)
         
         # Print progress
-        progress = round((i + 1) * 100 / (len(data1) + len(data2)))
-        print(f"{progress}%", end="\r")
+        progress = round((i + 1) * 100 / len(data))
+        print(f"Cantonese1.tsv: {progress}%", end="\r")
+    print("Cantonese1.tsv: 100%")
 
     for i in range(len(data)):
         if not data[i][1]:
             break
 
-        # TODO: Comment
+        # 2nd deck back: Jyutping  -  Simplified (pinyin)
         arr = [data[i][1], f"{get_jyutping(data[i][1])}  -  {chinese_converter.to_simplified(data[i][1])} ({pinyin(data[i][1])})"]
         data2.append(arr)
         
         # Print progress
-        progress = round((len(data1) + i + 1) * 100 / (len(data1) + len(data2)))
-        print(f"{progress}%", end="\r")
-    print()
+        progress = round((i + 1) * 100 / len(data))
+        print(f"Cantonese2.tsv: {progress}%", end="\r")
+    print("Cantonese2.tsv: 100%")
 
     # Export Cantonese1.tsv
     with open("Cantonese1.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
