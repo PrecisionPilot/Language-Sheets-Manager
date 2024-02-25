@@ -31,11 +31,11 @@ def inputMultiline() -> str:
 def formatter(data: list):
     for i in range(len(data)):
         if data[i][0]:
-            # 1st main column: Jyutping, English - Chinese (pinyin)
+            # 1st deck back: English  -  Simplified (pinyin)
             translation = translate(data[i][0])
-            data[i][1] = f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})"
+            data[i].insert(1, f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})")
         if data[i][2]:
-            # Add Jyutping (2nd main column)
+            # 2nd deck back: Jyutping  -  Simplified (pinyin)
             data[i].append(f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})")
 
         progress = round((i + 1) * 100 / len(data))
