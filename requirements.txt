@@ -2,3 +2,5 @@ pandas
 numpy
 csv
 xpinyin
+pyjyutping
+chinese-converter

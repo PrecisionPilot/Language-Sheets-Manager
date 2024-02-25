@@ -1,10 +1,8 @@
 import pandas as pd
 import numpy as np
 import csv
-import os
 from xpinyin import Pinyin
 from pathlib import Path
-
 
 def pinyin(x: str) -> str:
     p = Pinyin()
@@ -21,7 +19,7 @@ def inputMultiline() -> str:
         userInput += i + "\n"
     return userInput
 
-def formatter(data: str):
+def formatter(data: list):
     
     list = [[0, 1], [0, 2]]
 
