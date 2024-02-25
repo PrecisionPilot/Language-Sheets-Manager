@@ -52,13 +52,12 @@ def formatter(data: str):
     # ---Exporting process---
     
     # Ask user which language to output to csv
-    print("\nSelect languages (seperated by spaces) to output as tsv (tip: type \"all\" to use all options)\n" +
-            "Here are your options (", end="")
-    for key,val in languagesData.items(): languages.append(key)
+    for key,val in languagesData.items():
+        languages.append(key)
     languages.sort()
-    for i in range(len(languages) - 1): # print the language options available
-        print(languages[i], end=", ")
-    print(languages[-1] + "): ", end="")
+    # print the language options available
+    print("\nSelect languages (seperated by spaces) to output as tsv (tip: type \"all\" to use all options)\n" +
+            f"Here are your options ({', '.join(languages)})")
     languagesSelection = input().split(' ') # store user's selection(s)
     for i in range(len(languagesSelection)): # anti case sensitive code
         languagesSelection[i] = languagesSelection[i][0].upper() + languagesSelection[i][1:].lower()
