@@ -34,6 +34,8 @@ def formatter(data: list):
             # 1st deck back: English  -  Simplified (pinyin)
             translation = translate(data[i][0])
             data[i].insert(1, f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})")
+        else:
+            data[i].insert(1, "")
         if data[i][2]:
             # 2nd deck back: Jyutping  -  Simplified (pinyin)
             data[i].append(f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})")
