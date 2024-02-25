@@ -1,9 +1,17 @@
 import pandas as pd
 import numpy as np
 import csv
-from pyjyutping import jyutping
 from xpinyin import Pinyin
 import chinese_converter
+from translate import translate
+from pyjyutping import jyutping
+import jyutping as jytp
+
+def get_jyutping(text: str) -> str:
+    # If ping1 has a none, then sub element with ping2
+    ping1 = jytp.get(text)
+    ping2 = jyutping.convert(text).split(" ")
+    return " ".join([ping1[i] if ping1[i] else ping2[i] for i in range(len(ping1))])
 
 def pinyin(x: str) -> str:
     p = Pinyin()
@@ -24,16 +32,21 @@ def formatter(data: list):
     for i in range(len(data)):
         if data[i][0]:
             # 1st main column: Jyutping, English - Chinese (pinyin)
-            print(data[i][0])
+            translation = translate(data[i][0])
+            data[i][1] = f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})"
         if data[i][2]:
             # Add Jyutping (2nd main column)
-            data[i].append(f"{jyutping.convert(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})")
+            data[i].append(f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})")
+
+        progress = round((i + 1) * 100 / len(data))
+        print(f"{progress}%", end="\r")
+    print()
 
     # Export based on language selection
     with open("Cantonese.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
         writer = csv.writer(f, delimiter="\t")
         writer.writerows(data)
-    print("\nSuccessfully exported! (can be found in your downloads folder)")
+    print("\nSuccessfully exported!")
 # ---End of formatter()
 
 # introduction
