@@ -1,30 +1,20 @@
+import pandas as pd
+import numpy as np
+import csv
 import os
-from os import path
+from xpinyin import Pinyin
 from pathlib import Path
-try:
-    import pandas as pd
-    import numpy as np
-    import csv
-    import os
-    from xpinyin import Pinyin
-except ImportError:
-    print("installing required modules")
-    os.system("pip install pandas")
-    os.system("pip install numpy")
-    os.system("pip install csv")
-    os.system("pip install os")
-    os.system("pip install -U xpinyin")
 
 
 def pinyin(x: str) -> str:
     p = Pinyin()
     return p.get_pinyin(x, tone_marks="marks").replace("-", " ")
 
-def inputMultiline(end:str ="q") -> str:
+def inputMultiline() -> str:
     userInput = ""
     while True:
         i = input()
-        if i == end:
+        if i == "":
             # Remove the last newline
             userInput = userInput[0:-1]
             break
@@ -96,7 +86,7 @@ def formatter(data: str):
     
     # Message for whether the export succeeded or not
     if exportCount > 0:
-        print("\nSuccessfully exported", exportCount, "file(s)!")
+        print("\nSuccessfully exported", exportCount, "file(s)! (can be found in your downloads folder)")
         for selection in languagesSelection:
             print(selection + ".tsv")
         print("\nHave a good day!")
