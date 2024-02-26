@@ -32,13 +32,17 @@ def formatter(data: list):
     data1 = []
     data2 = []
 
+    # 1st deck back: English  -  Simplified (pinyin)
     for i in range(len(data)):
         if not data[i][0]:
             break
 
-        # 1st deck back: English  -  Simplified (pinyin)
         translation = translate(data[i][0])
-        arr = [data[i][0], f"{translation[0]}  -  {translation[1]} ({pinyin(translation[1])})"]
+        # If there's already the English def given
+        if data[i][1]:
+            arr = [data[i][0], f"{data[i][1]}  -  {translation[1]} ({pinyin(translation[1])})"]
+        else:
+            arr = [data[i][0], f"{translation[0].capitalize()}  -  {translation[1]} ({pinyin(translation[1])})"]
         data1.append(arr)
         
         # Print progress
@@ -47,11 +51,11 @@ def formatter(data: list):
     print("Cantonese1.tsv: 100%")
 
     for i in range(len(data)):
-        if not data[i][1]:
+        if not data[i][2]:
             break
 
         # 2nd deck back: Jyutping  -  Simplified (pinyin)
-        arr = [f"{get_jyutping(data[i][1])}  -  {chinese_converter.to_simplified(data[i][1])} ({pinyin(data[i][1])})", data[i][1]]
+        arr = [f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", data[i][2]]
         data2.append(arr)
         
         # Print progress
