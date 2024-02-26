@@ -54,8 +54,8 @@ def formatter(data: list):
         if not data[i][2]:
             break
 
-        # 2nd deck back: Jyutping  -  Simplified (pinyin)
-        arr = [f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
+        # 2nd deck front: Simplified (pinyin)
+        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
         data2.append(arr)
         
         # Print progress
