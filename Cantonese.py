@@ -55,7 +55,7 @@ def formatter(data: list):
             break
 
         # 2nd deck back: Jyutping  -  Simplified (pinyin)
-        arr = [f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", data[i][2]]
+        arr = [f"{get_jyutping(data[i][2])}  -  {chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
         data2.append(arr)
         
         # Print progress
