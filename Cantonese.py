@@ -3,7 +3,7 @@ import numpy as np
 import csv
 from xpinyin import Pinyin
 import chinese_converter
-from translate import translate
+from translate import translate, translate2Cantonese
 from pyjyutping import jyutping
 import jyutping as jytp
 
@@ -55,7 +55,7 @@ def formatter(data: list):
             break
 
         # 2nd deck front: Simplified (pinyin)
-        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
+        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", translate2Cantonese(data[i][2])]
         data2.append(arr)
         
         # Print progress
