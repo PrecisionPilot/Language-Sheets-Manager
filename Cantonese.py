@@ -29,50 +29,23 @@ def inputMultiline() -> str:
     return userInput
 
 def formatter(data: list):
-    data1 = []
-    data2 = []
-
-    # 1st deck back: English  -  Simplified (pinyin)
-    for i in range(len(data)):
-        if not data[i][0]:
-            break
-
-        translation = translate(data[i][0])
-        # If there's already the English def given
-        if data[i][1]:
-            arr = [data[i][0], f"{data[i][1]}  -  {translation[1]} ({pinyin(translation[1])})"]
-        else:
-            arr = [data[i][0], f"{translation[0].capitalize()}  -  {translation[1]} ({pinyin(translation[1])})"]
-        data1.append(arr)
-        
-        # Print progress
-        progress = round((i + 1) * 100 / len(data))
-        print(f"Cantonese1.tsv: {progress}%", end="\r")
-    print("Cantonese1.tsv: 100%")
 
     for i in range(len(data)):
-        if not data[i][2]:
+        if not data[i]:
             break
 
         # 2nd deck front: Simplified (pinyin)
-        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
-        data2.append(arr)
+        data[i] = [f"{chinese_converter.to_simplified(data[i])} ({pinyin(data[i])})", chinese_converter.to_traditional(data[i])]
         
         # Print progress
         progress = round((i + 1) * 100 / len(data))
         print(f"Cantonese2.tsv: {progress}%", end="\r")
     print("Cantonese2.tsv: 100%")
 
-    # Export Cantonese1.tsv
-    with open("Cantonese1.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
+    # Export Cantonese.tsv
+    with open("Cantonese.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
         writer = csv.writer(f, delimiter="\t")
-        writer.writerows(data1)
-
-    # Export Cantonese2.tsv
-    with open("Cantonese2.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
-        writer = csv.writer(f, delimiter="\t")
-        writer.writerows(data2)
-    print("\nSuccessfully exported!")
+        writer.writerows(data)
 
 
 # ---End of formatter()
@@ -85,10 +58,8 @@ print("Paste in the copied speadsheet")
 userInput = inputMultiline()
 print("Loading...")
 
-# Convert to 2d list
+# Convert to list
 userInput = userInput.split("\n")
-for i, inp in enumerate(userInput):
-    userInput[i] = inp.split("\t")
 
 formatter(userInput)
 
