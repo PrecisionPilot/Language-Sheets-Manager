@@ -32,10 +32,20 @@ def formatter(data: list):
     data1 = []
     data2 = []
 
+    # temporary storage to remove duplicate words
+    words1 = set()
+    words2 = set()
+
     # 1st deck back: English  -  Simplified (pinyin)
     for i in range(len(data)):
         if not data[i][0]:
             break
+        
+        # Prevent duplicates
+        if data[i][0] in words1:
+            continue
+        else:
+            words1.add(data[i][0])
 
         translation = translate(data[i][0])
         # If there's already the English def given
@@ -54,8 +64,14 @@ def formatter(data: list):
         if not data[i][2]:
             break
 
+        # Prevent duplicates
+        if data[i][2] in words2:
+            continue
+        else:
+            words2.add(data[i][2])
+
         # 2nd deck front: Simplified (pinyin)
-        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", translate2Cantonese(data[i][2])]
+        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
         data2.append(arr)
         
         # Print progress
