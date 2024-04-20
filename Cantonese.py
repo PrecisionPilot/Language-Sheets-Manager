@@ -28,28 +28,24 @@ def inputMultiline() -> str:
         userInput += i + "\n"
     return userInput
 
-def formatter(data: list):
+# 1st deck back: English  -  Simplified (pinyin)
+def cantonese_parser(data) -> list:
     data1 = []
-    data2 = []
-
     # temporary storage to remove duplicate words
-    words1 = set()
-    words2 = set()
-
-    # 1st deck back: English  -  Simplified (pinyin)
+    words = set()
     for i in range(len(data)):
         if not data[i][0]:
             break
         
         # Prevent duplicates
-        if data[i][0] in words1:
+        if data[i][0] in words:
             continue
         else:
-            words1.add(data[i][0])
+            words.add(data[i][0])
 
         translation = translate(data[i][0])
         # If there's already the English def given
-        if data[i][1]:
+        if len(data[i]) >= 2 and data[i][1]:
             arr = [data[i][0], f"{data[i][1]}  -  {translation[1]} ({pinyin(translation[1])})"]
         else:
             arr = [data[i][0], f"{translation[0].capitalize()}  -  {translation[1]} ({pinyin(translation[1])})"]
@@ -59,9 +55,14 @@ def formatter(data: list):
         progress = round((i + 1) * 100 / len(data))
         print(f"Cantonese1.tsv: {progress}%", end="\r")
     print("Cantonese1.tsv: 100%")
+    return data1
 
+def mandarin_parser(data) -> list:
+    data2 = []
+    # temporary storage to remove duplicate words
+    words2 = set()
     for i in range(len(data)):
-        if not data[i][2]:
+        if len(data[i]) < 3 or not data[i][2]:
             break
 
         # Prevent duplicates
@@ -78,6 +79,11 @@ def formatter(data: list):
         progress = round((i + 1) * 100 / len(data))
         print(f"Cantonese2.tsv: {progress}%", end="\r")
     print("Cantonese2.tsv: 100%")
+    return data2
+
+def formatter(data: list):
+    data1 = cantonese_parser(data)
+    data2 = mandarin_parser(data)
 
     # Export Cantonese1.tsv
     with open("Cantonese1.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
