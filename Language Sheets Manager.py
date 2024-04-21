@@ -69,7 +69,8 @@ def formatter(data: list):
         languagesSelection = [languages[int(i)] for i in userInput.split(' ')] # store user's selections as a number array
 
     # Get the downloads folder
-    destination_path = str(Path.home() / "Downloads")
+    # destination_path = str(Path.home() / "Downloads")
+    destination_path = ""
     if destination_path: # C:\Users\seanw\Downloads\ -> Downloads\
         destination_path += "\\"
 
@@ -84,7 +85,7 @@ def formatter(data: list):
     
     # Message for whether the export succeeded or not
     if exportCount > 0:
-        print("\nSuccessfully exported", exportCount, "file(s)! (can be found in your downloads folder)")
+        print("\nSuccessfully exported", exportCount, "file(s)!")
         for selection in languagesSelection:
             print(selection + ".tsv")
         print("\nHave a good day!")
