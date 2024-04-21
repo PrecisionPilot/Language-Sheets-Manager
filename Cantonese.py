@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import csv
 from xpinyin import Pinyin
-import chinese_converter
+from chinese_converter import to_simplified, to_traditional
 from translate import translate, translate2Cantonese
 from pyjyutping import jyutping
 import jyutping as jytp
@@ -29,7 +29,7 @@ def inputMultiline() -> str:
     return userInput
 
 # 1st deck back: English  -  Simplified (pinyin)
-def cantonese_parser(data) -> list:
+def cantonese_parser(data: list) -> list:
     data1 = []
     # temporary storage to remove duplicate words
     words = set()
@@ -45,7 +45,7 @@ def cantonese_parser(data) -> list:
 
         translation = translate(data[i][0])
         # If there's already the English def given
-        if len(data[i]) >= 2 and data[i][1]:
+        if data[i][1]:
             arr = [data[i][0], f"{data[i][1]}  -  {translation[1]} ({pinyin(translation[1])})"]
         else:
             arr = [data[i][0], f"{translation[0].capitalize()}  -  {translation[1]} ({pinyin(translation[1])})"]
@@ -57,22 +57,22 @@ def cantonese_parser(data) -> list:
     print("Cantonese1.tsv: 100%")
     return data1
 
-def mandarin_parser(data) -> list:
+def mandarin_parser(data: list, index: int) -> list:
     data2 = []
     # temporary storage to remove duplicate words
     words2 = set()
     for i in range(len(data)):
-        if len(data[i]) < 3 or not data[i][2]:
+        if not data[i][index]:
             break
 
         # Prevent duplicates
-        if data[i][2] in words2:
+        if data[i][index] in words2:
             continue
         else:
-            words2.add(data[i][2])
+            words2.add(data[i][index])
 
         # 2nd deck front: Simplified (pinyin)
-        arr = [f"{chinese_converter.to_simplified(data[i][2])} ({pinyin(data[i][2])})", chinese_converter.to_traditional(data[i][2])]
+        arr = [f"{to_simplified(data[i][index])} ({pinyin(data[i][index])})", to_traditional(data[i][index])]
         data2.append(arr)
         
         # Print progress
@@ -81,20 +81,60 @@ def mandarin_parser(data) -> list:
     print("Cantonese2.tsv: 100%")
     return data2
 
+# front: Cantonese; back: English  -  Simplified (pinyin)
+def mandarin2cantonese_parser(data: list) -> list:
+    data3 = []
+    # temporary storage to remove duplicate words
+    words3 = set()
+    for i in range(len(data)):
+        if not data[i][0]:
+            break
+
+        # Prevent duplicates
+        if data[i][0] in words3:
+            continue
+        else:
+            words3.add(data[i][0])
+
+        translation = translate2Cantonese(data[i][0])
+        arr = [translation[1], f"{translation[0].capitalize()}  -  {data[i][0]} ({pinyin(data[i][0])})"]
+        data3.append(arr)
+        
+        # Print progress
+        progress = round((i + 1) * 100 / len(data))
+        print(f"Cantonese.tsv: {progress}%", end="\r")
+    print("Cantonese.tsv: 100%")
+    return data3
+
 def formatter(data: list):
-    data1 = cantonese_parser(data)
-    data2 = mandarin_parser(data)
+    data1 = []
+    data2 = []
+    data3 = []
+    if len(data[0]) == 3:
+        data1 = cantonese_parser(data)
+        data2 = mandarin_parser(data, 2)
+    elif len(data[0]) == 2:
+        data1 = cantonese_parser(data)
+    elif len(data[0]) == 1:
+        data3 = mandarin2cantonese_parser(data)
 
     # Export Cantonese1.tsv
-    with open("Cantonese1.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
-        writer = csv.writer(f, delimiter="\t")
-        writer.writerows(data1)
-
+    if data1:
+        with open("Cantonese1.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
+            writer = csv.writer(f, delimiter="\t")
+            writer.writerows(data1)
     # Export Cantonese2.tsv
-    with open("Cantonese2.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
-        writer = csv.writer(f, delimiter="\t")
-        writer.writerows(data2)
-    print("\nSuccessfully exported!")
+    if data2:
+        with open("Cantonese2.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
+            writer = csv.writer(f, delimiter="\t")
+            writer.writerows(data2)
+        print("\nSuccessfully exported!")
+    
+    if data3:
+        with open("Cantonese.tsv", "w+", newline="", encoding="utf-8") as f: # Writes it in the right path 
+            writer = csv.writer(f, delimiter="\t")
+            writer.writerows(data3)
+        print("\nSuccessfully exported!")
 
 
 # ---End of formatter()

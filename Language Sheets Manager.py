@@ -4,6 +4,9 @@ import csv
 from xpinyin import Pinyin
 from pathlib import Path
 
+# Options
+add_pinyin = False
+
 def pinyin(x: str) -> str:
     p = Pinyin()
     return p.get_pinyin(x, tone_marks="marks").replace("-", " ")
@@ -36,7 +39,8 @@ def formatter(data: list):
             data[i][2], data[i][3] = data[i][3], data[i][2]
         if data[i][0] == "Chinese (Simplified)": # Make sure all is "Chinese" not "Chinese (Simplified)"
             data[i][0] = "Chinese"
-        if data[i][0] == "Chinese" or data[i][0] == "Chinese (Traditional)": # Add pinyin to the English part if it's a Chinese translation
+        isChinese = data[i][0] == "Chinese" or data[i][0] == "Chinese (Traditional)"
+        if isChinese and add_pinyin: # Add pinyin to the English part if it's a Chinese translation
             data[i][3] = "(" + pinyin(data[i][2]) + ")  " + data[i][3]
 
     # Get all existing languages in the spreadsheet, store it in "languagesData" list

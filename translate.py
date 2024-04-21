@@ -51,7 +51,7 @@ def translate2Cantonese(input_text: str) -> str:
     params = {
         'api-version': '3.0',
         'from': 'zh-Hans',
-        'to': ['yue']
+        'to': ['en', 'yue']
     }
 
     headers = {
@@ -70,7 +70,8 @@ def translate2Cantonese(input_text: str) -> str:
     request = requests.post(constructed_url, params=params, headers=headers, json=body)
     response = request.json()
 
-    return ";".join([trns["text"] for trns in response[0]["translations"]])
+    return [trns["text"] for trns in response[0]["translations"]]
+
 
 if __name__ == "__main__":
     print(translate2Cantonese("我好想你"))
